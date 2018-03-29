@@ -1,0 +1,115 @@
+package com.example.jok.aclass;
+
+import android.content.res.Configuration;
+import android.support.annotation.Nullable;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+public class MainActivity extends AppCompatActivity {
+    private String[] mDrawerTitle = {"Home", "Profile", "Flower", "Contact"};
+    private DrawerLayout mDrawerLayout;
+    private ActionBarDrawerToggle  actionBarDrawerToggle;
+    private ListView mListView;
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        actionBarDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        actionBarDrawerToggle.syncState();
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        mDrawerLayout = findViewById(R.id.drawer_layout);
+        actionBarDrawerToggle = new ActionBarDrawerToggle(MainActivity.this, mDrawerLayout, R.string.open_drawer, R.string.close_drawer);
+         mDrawerLayout.addDrawerListener(actionBarDrawerToggle);
+         getSupportActionBar().setHomeButtonEnabled(true);
+         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+         mListView = findViewById(R.id.drawer);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, mDrawerTitle);
+        mListView.setAdapter(adapter);
+
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String  itemValue    = (String) mListView.getItemAtPosition(position);
+                mDrawerLayout.closeDrawers();
+                Toast.makeText(getApplicationContext(),
+                        "Position :"+ position+"  ListItem : " +itemValue , Toast.LENGTH_SHORT)
+                        .show();
+            }
+        });
+        //custom
+        int[] resId = {R.drawable.test, R.drawable.test2, R.drawable.test3, R.drawable.test4,
+                R.drawable.test5, R.drawable.test6, R.drawable.test7, R.drawable.test8, R.drawable.test9,
+                R.drawable.test10, R.drawable.test11, R.drawable.test12};
+
+
+        String[] list = { "Chrysanthemum", "Orchid", "Red carnation", "Lilly", "Plumeria",
+                "Lilac", "Lotus", "Sunflower", "Tulip", "Rose", "Cactus", "Bird of Paradise"
+
+        };
+        CustomAdapter customAdapter = new CustomAdapter(getApplicationContext(), list, resId);
+
+        ListView listView = (ListView)findViewById(R.id.listView1);
+        listView.setAdapter(customAdapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long row_id) {
+                TextView textView = (TextView)view.findViewById(R.id.textView1);
+                System.out.println( textView.getText());
+                Toast.makeText(getApplicationContext(), "Clicked on item: " +  position , Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+
+
+
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (actionBarDrawerToggle.onOptionsItemSelected(item))
+            return true;
+
+        switch (item.getItemId()) {
+            case R.id.mnuNew:
+                Toast.makeText(this, "New!", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.mnuHelp:
+                Toast.makeText(this, "Help!", Toast.LENGTH_SHORT).show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+
+
+}
